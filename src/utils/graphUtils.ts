@@ -2,7 +2,7 @@ import {GraphType} from '@Types';
 
 export const formatGraphType = (graphType: GraphType): string => {
 	const graphLabelMapping: Partial<Record<GraphType, string>> = {
-		[GraphType.KPI]: 'KPI',
+		[GraphType.GAUGE]: 'Gauge',
 		[GraphType.BAR]: 'Bar',
 		[GraphType.LINE]: 'Line',
 		[GraphType.PIE]: 'Pie',

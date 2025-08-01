@@ -1,8 +1,10 @@
 import {Box, styled} from '@mui/material';
 import type {GraphType} from '@Types';
-import {KPI} from './Graphs';
+import {GaugeGraph} from './Graphs/GaugeGraph';
 
-const GraphContainer = styled(Box)(() => ({}));
+const GraphContainer = styled(Box)(() => ({
+	flex: 1,
+}));
 
 type SpendingGraphProps = {
 	selectedGraphType: GraphType;
@@ -11,7 +13,7 @@ type SpendingGraphProps = {
 export const SpendingGraph = ({selectedGraphType}: SpendingGraphProps) => {
 	return (
 		<GraphContainer>
-			<KPI />
+			<GaugeGraph />
 		</GraphContainer>
 	);
 };

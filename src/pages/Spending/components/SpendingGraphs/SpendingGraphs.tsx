@@ -10,6 +10,8 @@ const GraphsContainer = styled(Box)(({theme}) => ({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: theme.spacing(2),
+	boxSizing: 'border-box',
+	padding: theme.spacing(2),
 }));
 
 type SpendingGraphsProps = {

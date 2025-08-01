@@ -1,9 +1,9 @@
 import {GraphType} from '@Types';
 
-export const DEFAULT_GRAPH_TYPE = GraphType.KPI;
+export const DEFAULT_GRAPH_TYPE = GraphType.GAUGE;
 
 export const SUPPORTED_GRAPH_TYPES = [
-	GraphType.KPI,
+	GraphType.GAUGE,
 	GraphType.BAR,
 	GraphType.LINE,
 	GraphType.PIE,

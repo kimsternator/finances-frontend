@@ -1,1 +1,1 @@
-export * from './KPI';
+export * from './GaugeGraph';

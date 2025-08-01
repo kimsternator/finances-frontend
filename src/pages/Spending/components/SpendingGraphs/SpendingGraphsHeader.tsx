@@ -23,7 +23,6 @@ const HeaderContainer = styled(Box)(({theme}) => ({
 	display: 'flex',
 	flexDirection: 'row',
 	alignItems: 'center',
-	padding: theme.spacing(1),
 }));
 
 type SpendingGraphsHeaderProps = {

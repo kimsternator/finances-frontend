@@ -1,5 +1,5 @@
 export const enum GraphType {
-	KPI,
+	GAUGE,
 	BAR,
 	LINE,
 	PIE,
