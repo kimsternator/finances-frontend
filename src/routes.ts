@@ -5,6 +5,7 @@ export default [
 	index('routes/home.tsx'),
 
 	route('home', 'routes/home-route.tsx'),
+	route('spending/', 'routes/spending-route.tsx'),
 
 	route(
 		'/.well-known/appspecific/com.chrome.devtools.json',
