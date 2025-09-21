@@ -16,8 +16,11 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["src/*"],
+			"@Api": ["src/api"],
+			"@Auth/*": ["src/auth/*"],
 			"@Constants": ["src/constants"],
 			"@Pages": ["src/pages"],
+			"@State": ["src/state"],
 			"@Types": ["src/types"],
 			"@Utils": ["src/utils"]
 		},
