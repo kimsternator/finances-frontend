@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import type {ChangeEvent, MouseEvent} from 'react';
-import {useNavigate} from 'react-router';
+import {data, useNavigate} from 'react-router';
 import {
 	Alert,
 	Box,
@@ -18,7 +18,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {useLoginMutation} from '@Api';
 import type {LoginData} from '@Types';
-import {isValidLoginData} from '@Utils';
+import {isValidLoginData, persistUsernameInStorage} from '@Utils';
 import {Routes} from '@Constants';
 
 const LoginFormContainer = styled(Box)<BoxProps>(({theme}) => ({
@@ -95,8 +95,12 @@ export const LoginForm = () => {
 	const handleLoginSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 		const {rememberMe, ...loginRequest} = loginData;
-		const response = await login(loginRequest);
-		console.log(response);
+		const {username} = loginData;
+		const {data, error} = await login(loginRequest);
+		if (error) {
+			return;
+		}
+		persistUsernameInStorage({...data, username, rememberMe});
 	};
 
 	useEffect(() => {

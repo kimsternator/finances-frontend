@@ -8,6 +8,7 @@ const LoginPageContainer = styled(Box)(({theme}) => ({
 	boxSizing: 'border-box',
 	alignItems: 'center',
 	justifyContent: 'center',
+	backgroundColor: 'lightskyblue',
 }));
 
 export const LoginPage = () => {

@@ -1,4 +1,4 @@
-import type {UserResponse} from './apiResponses';
+import type {TokenResponse, UserResponse} from './apiResponses';
 import type {LoginRequest} from './apiTypes';
 
 export type AuthState = {

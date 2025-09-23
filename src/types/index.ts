@@ -3,4 +3,5 @@ export * from './apiTypes';
 export * from './authTypes';
 export * from './EntityTypes';
 export * from './graphTypes';
+export * from './routeTypes';
 export * from './stateTypes';

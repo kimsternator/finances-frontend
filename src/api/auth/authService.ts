@@ -44,8 +44,18 @@ export const authService = createApi({
 				method: 'GET',
 			}),
 		}),
+		getCurrentUser: builder.query<GetUserResponse, GetUserRequest>({
+			query: ({username}) => ({
+				url: `/get-user/${username}`,
+				method: 'GET',
+			}),
+		}),
 	}),
 });
 
-export const {useLoginMutation, useRefreshTokenMutation, useGetUserQuery} =
-	authService;
+export const {
+	useLoginMutation,
+	useRefreshTokenMutation,
+	useGetUserQuery,
+	useGetCurrentUserQuery,
+} = authService;

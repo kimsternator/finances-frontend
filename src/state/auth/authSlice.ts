@@ -1,10 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
-import {initialAuthState} from '@Constants';
-import type {AuthState, UserResponse} from '@Types';
+import {AUTH_STORE_NAME, initialAuthState} from '@Constants';
+import type {TokenResponse, UserResponse} from '@Types';
+import {authService} from '@Api';
 
 export const authSlice = createSlice({
-	name: 'auth',
+	name: AUTH_STORE_NAME,
 	initialState: initialAuthState,
 	reducers: {
 		setAccessToken: (state, action: PayloadAction<string>) => {
@@ -19,16 +20,49 @@ export const authSlice = createSlice({
 		setRefreshTokenExpiryTime: (state, action: PayloadAction<number>) => {
 			state.refreshTokenExpiryTime = action.payload;
 		},
+		setAuthTokenValues: (state, {payload}: PayloadAction<TokenResponse>) => {
+			const {
+				accessToken,
+				accessTokenExpiryTime,
+				refreshToken,
+				refreshTokenExpiryTime,
+			} = payload;
+			state.accessToken = accessToken;
+			state.accessTokenExpiryTime = accessTokenExpiryTime;
+			state.refreshToken = refreshToken;
+			state.refreshTokenExpiryTime = refreshTokenExpiryTime;
+		},
 		setCurrentUser: (state, action: PayloadAction<UserResponse | null>) => {
 			state.currentUser = action.payload;
 		},
-		setAuthState: (_state, action: PayloadAction<AuthState>) => {
-			// state.accessToken = action.payload.accessToken;
-			// state.accessTokenExpiryTime = action.payload.accessTokenExpiryTime;
-			// state.refreshToken = action.payload.refreshToken;
-			// state.refreshTokenExpiryTime = action.payload.refreshTokenExpiryTime;
-			// state.currentUser = action.payl
-			return action.payload;
-		},
+	},
+	extraReducers: (builder) => {
+		builder.addMatcher(
+			authService.endpoints.login.matchFulfilled,
+			(state, {payload}) => {
+				authSlice.caseReducers.setAuthTokenValues(state, {
+					payload,
+					type: authSlice.actions.setAuthTokenValues.type,
+				});
+			},
+		);
+		builder.addMatcher(
+			authService.endpoints.refreshToken.matchFulfilled,
+			(state, {payload}) => {
+				authSlice.caseReducers.setAuthTokenValues(state, {
+					payload,
+					type: authSlice.actions.setAuthTokenValues.type,
+				});
+			},
+		);
+		builder.addMatcher(
+			authService.endpoints.getCurrentUser.matchFulfilled,
+			(state, {payload}) => {
+				authSlice.caseReducers.setCurrentUser(state, {
+					payload,
+					type: authSlice.actions.setCurrentUser.type,
+				});
+			},
+		);
 	},
 });

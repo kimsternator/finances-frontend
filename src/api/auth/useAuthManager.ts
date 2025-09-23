@@ -1,19 +1,18 @@
 import {useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router';
 import {
-	selectAccessToken,
 	selectAccessTokenExpiryTime,
 	selectCurrentUser,
 	selectRefreshToken,
 	selectRefreshTokenExpiryTime,
 	useTypedSelector,
 } from '@State';
-import {checkTokenExpired} from '@Utils';
-import {useGetUserQuery, useRefreshTokenMutation} from './authService';
+import {checkTokenExpired, isRoute} from '@Utils';
+import {useRefreshTokenMutation} from './authService';
+import {Routes, TOKEN_REFRESH_BUFFER_MS} from '@Constants';
 
 export const useAuthManager = () => {
 	const currentUser = useTypedSelector(selectCurrentUser);
-	const accessToken = useTypedSelector(selectAccessToken);
 	const accessTokenExpiryTime = useTypedSelector(selectAccessTokenExpiryTime);
 	const refreshToken = useTypedSelector(selectRefreshToken);
 	const refreshTokenExpiryTime = useTypedSelector(selectRefreshTokenExpiryTime);
@@ -21,15 +20,8 @@ export const useAuthManager = () => {
 	const navigate = useNavigate();
 	const [refreshTokenFn] = useRefreshTokenMutation();
 
-	console.log('here in refreshTokenManager', location);
-
-	const handleRefreshToken = () => {
-		if (!currentUser) {
-			// navigate('/login');
-			console.log('current user not found');
-			return;
-		}
-		refreshTokenFn({username: currentUser.username, refreshToken})
+	const handleRefreshToken = (username: string) => {
+		refreshTokenFn({username: username, refreshToken})
 			.unwrap()
 			.then((response) => {
 				// const parsedResponse = parseTokenResponse(response);
@@ -38,25 +30,30 @@ export const useAuthManager = () => {
 	};
 
 	useEffect(() => {
+		if (isRoute(location, Routes.LOGIN)) {
+			return;
+		}
 		if (!currentUser) {
-			console.warn('No current user found. Fetching now.');
+			console.warn('No current user initialized. Prompting to log in.');
+			navigate(Routes.LOGIN);
 			return;
 		}
 		if (!refreshToken || checkTokenExpired(refreshTokenExpiryTime)) {
-			console.warn(
-				'No valid refresh token available. User will need to log in.',
-			);
-			// navigate('/login');
+			console.warn('Refresh token expired. Prompting to log in.');
+			navigate(Routes.LOGIN);
 			return;
 		}
-
-		const refreshTokenTimeout = setInterval(() => {
-			handleRefreshToken();
-		}, accessTokenExpiryTime - Date.now());
+		const refreshTokenTimeout = setInterval(
+			() => {
+				console.info('Access token about to expired. Refreshing access token.');
+				handleRefreshToken(currentUser.username);
+			},
+			accessTokenExpiryTime - Date.now() - TOKEN_REFRESH_BUFFER_MS,
+		);
 		return () => {
 			clearInterval(refreshTokenTimeout);
 		};
-	}, [refreshToken]);
+	}, [accessTokenExpiryTime, currentUser, location, refreshToken]);
 
 	return null;
 };
