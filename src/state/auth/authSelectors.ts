@@ -3,6 +3,11 @@ import type {RootState} from '@Types';
 
 export const selectAuthState = (state: RootState) => state.auth;
 
+export const selectIsAuthLoading = createSelector(
+	selectAuthState,
+	(state) => state.isAuthLoading,
+);
+
 export const selectAccessToken = createSelector(
 	selectAuthState,
 	(state) => state.accessToken,

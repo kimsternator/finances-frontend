@@ -3,15 +3,18 @@ import {useLocation, useNavigate} from 'react-router';
 import {
 	selectAccessTokenExpiryTime,
 	selectCurrentUser,
+	selectIsAuthLoading,
 	selectRefreshToken,
 	selectRefreshTokenExpiryTime,
 	useTypedSelector,
 } from '@State';
 import {checkTokenExpired, isRoute} from '@Utils';
-import {useRefreshTokenMutation} from './authService';
+import {useRefreshTokenMutation} from '../authService';
 import {Routes, TOKEN_REFRESH_BUFFER_MS} from '@Constants';
+import dayjs from 'dayjs';
 
 export const useAuthManager = () => {
+	const isAuthLoading = useTypedSelector(selectIsAuthLoading);
 	const currentUser = useTypedSelector(selectCurrentUser);
 	const accessTokenExpiryTime = useTypedSelector(selectAccessTokenExpiryTime);
 	const refreshToken = useTypedSelector(selectRefreshToken);
@@ -20,17 +23,8 @@ export const useAuthManager = () => {
 	const navigate = useNavigate();
 	const [refreshTokenFn] = useRefreshTokenMutation();
 
-	const handleRefreshToken = (username: string) => {
-		refreshTokenFn({username: username, refreshToken})
-			.unwrap()
-			.then((response) => {
-				// const parsedResponse = parseTokenResponse(response);
-				console.log('here response', response);
-			});
-	};
-
 	useEffect(() => {
-		if (isRoute(location, Routes.LOGIN)) {
+		if (isAuthLoading || isRoute(location, Routes.LOGIN)) {
 			return;
 		}
 		if (!currentUser) {
@@ -46,14 +40,20 @@ export const useAuthManager = () => {
 		const refreshTokenTimeout = setInterval(
 			() => {
 				console.info('Access token about to expired. Refreshing access token.');
-				handleRefreshToken(currentUser.username);
+				refreshTokenFn({username: currentUser.username, refreshToken});
 			},
-			accessTokenExpiryTime - Date.now() - TOKEN_REFRESH_BUFFER_MS,
+			dayjs(accessTokenExpiryTime).diff(dayjs()) - TOKEN_REFRESH_BUFFER_MS,
 		);
 		return () => {
 			clearInterval(refreshTokenTimeout);
 		};
-	}, [accessTokenExpiryTime, currentUser, location, refreshToken]);
+	}, [
+		accessTokenExpiryTime,
+		currentUser,
+		location,
+		refreshToken,
+		isAuthLoading,
+	]);
 
 	return null;
 };

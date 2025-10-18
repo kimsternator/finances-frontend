@@ -11,6 +11,7 @@ import './root.scss';
 import {Provider} from 'react-redux';
 import {store} from '@State';
 import {AuthManager} from '@Api';
+import {AuthLoader} from './api/auth/authLoader';
 
 export const links: Route.LinksFunction = () => [
 	{rel: 'preconnect', href: 'https://fonts.googleapis.com'},
@@ -46,6 +47,7 @@ export function Layout({children}: {children: React.ReactNode}) {
 export default function App() {
 	return (
 		<Provider store={store}>
+			<AuthLoader />
 			<AuthManager />
 			<Outlet />
 		</Provider>

@@ -8,6 +8,9 @@ export const authSlice = createSlice({
 	name: AUTH_STORE_NAME,
 	initialState: initialAuthState,
 	reducers: {
+		setIsAuthLoading: (state, action: PayloadAction<boolean>) => {
+			state.isAuthLoading = action.payload;
+		},
 		setAccessToken: (state, action: PayloadAction<string>) => {
 			state.accessToken = action.payload;
 		},

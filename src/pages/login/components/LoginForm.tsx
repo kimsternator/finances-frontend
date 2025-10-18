@@ -18,7 +18,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {useLoginMutation} from '@Api';
 import type {LoginData} from '@Types';
-import {isValidLoginData, persistUsernameInStorage} from '@Utils';
+import {isValidLoginData, setAuthDataInStorage} from '@Utils';
 import {Routes} from '@Constants';
 
 const LoginFormContainer = styled(Box)<BoxProps>(({theme}) => ({
@@ -100,7 +100,7 @@ export const LoginForm = () => {
 		if (error) {
 			return;
 		}
-		persistUsernameInStorage({...data, username, rememberMe});
+		setAuthDataInStorage({...data, username, rememberMe});
 	};
 
 	useEffect(() => {

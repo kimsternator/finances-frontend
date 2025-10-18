@@ -1,7 +1,8 @@
-import type {TokenResponse, UserResponse} from './apiResponses';
+import type {UserResponse} from './apiResponses';
 import type {LoginRequest} from './apiTypes';
 
 export type AuthState = {
+	isAuthLoading: boolean;
 	accessToken: string;
 	accessTokenExpiryTime: number;
 	refreshToken: string;

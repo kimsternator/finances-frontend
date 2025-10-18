@@ -1,2 +1,1 @@
-export * from './AuthManager';
-export * from './useAuthManager';
+export * from './authManager';
