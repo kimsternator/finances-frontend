@@ -1,6 +1,6 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import type {ChangeEvent, MouseEvent} from 'react';
-import {data, useNavigate} from 'react-router';
+import {useNavigate} from 'react-router';
 import {
 	Alert,
 	Box,
@@ -16,10 +16,11 @@ import {
 import type {BoxProps} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import {useLoginMutation} from '@Api';
+import {authService, useLoginMutation} from '@Api';
 import type {LoginData} from '@Types';
 import {isValidLoginData, setAuthDataInStorage} from '@Utils';
 import {Routes} from '@Constants';
+import {useTypedDispatch} from '@State';
 
 const LoginFormContainer = styled(Box)<BoxProps>(({theme}) => ({
 	display: 'flex',
@@ -60,16 +61,11 @@ export const LoginForm = () => {
 		password: '',
 		rememberMe: false,
 	});
-	const [
-		login,
-		{
-			isLoading: isLoginLoading,
-			isError: isLoginError,
-			isSuccess: isLoginSuccess,
-		},
-	] = useLoginMutation();
+	const [login, {isLoading: isLoginLoading, isError: isLoginError}] =
+		useLoginMutation();
 	const navigate = useNavigate();
 	const {username, password, rememberMe} = loginData;
+	const dispatch = useTypedDispatch();
 
 	const handleTextFieldChange = (
 		event: ChangeEvent<{name: string; value: string}>,
@@ -101,13 +97,9 @@ export const LoginForm = () => {
 			return;
 		}
 		setAuthDataInStorage({...data, username, rememberMe});
+		await dispatch(authService.endpoints.getCurrentUser.initiate({username}));
+		navigate(Routes.HOME);
 	};
-
-	useEffect(() => {
-		if (isLoginSuccess) {
-			navigate(Routes.HOME);
-		}
-	}, [isLoginSuccess]);
 
 	const isSubmitDisabled = !isValidLoginData(loginData) || isLoginLoading;
 

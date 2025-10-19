@@ -1,4 +1,4 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {createApi} from '@reduxjs/toolkit/query/react';
 import {AUTH_BASE_URL} from '@Constants';
 import type {
 	GetUserRequest,
@@ -11,10 +11,11 @@ import type {
 } from '@Types';
 import {selectAccessToken} from '@State';
 import {setAuthorizationHeader} from '@Utils';
+import {getRetryableQuery} from '../query';
 
 export const authService = createApi({
 	reducerPath: 'authService',
-	baseQuery: fetchBaseQuery({
+	baseQuery: getRetryableQuery({
 		baseUrl: AUTH_BASE_URL,
 		prepareHeaders: (headers, {getState}) => {
 			const state = getState() as RootState;

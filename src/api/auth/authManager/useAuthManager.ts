@@ -21,7 +21,10 @@ export const useAuthManager = () => {
 	const refreshTokenExpiryTime = useTypedSelector(selectRefreshTokenExpiryTime);
 	const location = useLocation();
 	const navigate = useNavigate();
-	const [refreshTokenFn] = useRefreshTokenMutation();
+	const [
+		refreshTokenFn,
+		{isLoading: isRefreshTokenLoading, isError: isRefreshTokenError},
+	] = useRefreshTokenMutation();
 
 	useEffect(() => {
 		if (isAuthLoading || isRoute(location, Routes.LOGIN)) {
@@ -37,16 +40,20 @@ export const useAuthManager = () => {
 			navigate(Routes.LOGIN);
 			return;
 		}
-		const refreshTokenTimeout = setInterval(
-			() => {
-				console.info('Access token about to expired. Refreshing access token.');
-				refreshTokenFn({username: currentUser.username, refreshToken});
-			},
-			dayjs(accessTokenExpiryTime).diff(dayjs()) - TOKEN_REFRESH_BUFFER_MS,
-		);
-		return () => {
-			clearInterval(refreshTokenTimeout);
-		};
+		if (!isRefreshTokenError && !isRefreshTokenLoading) {
+			const refreshTokenTimeout = setInterval(
+				() => {
+					console.info(
+						'Access token about to expired. Refreshing access token.',
+					);
+					refreshTokenFn({username: currentUser.username, refreshToken});
+				},
+				dayjs(accessTokenExpiryTime).diff(dayjs()) - TOKEN_REFRESH_BUFFER_MS,
+			);
+			return () => {
+				clearInterval(refreshTokenTimeout);
+			};
+		}
 	}, [
 		accessTokenExpiryTime,
 		currentUser,
