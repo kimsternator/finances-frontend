@@ -12,9 +12,10 @@ import {Provider} from 'react-redux';
 import {store} from '@State';
 import {AuthManager} from '@Api';
 import {NavigationBar, NavigationTabs} from '@Components';
-
 import {AuthLoader} from './api/auth/authLoader';
 import {Box, CssBaseline, styled} from '@mui/material';
+import '@Configuration/dayjs-configuration';
+
 export const links: Route.LinksFunction = () => [
 	{rel: 'preconnect', href: 'https://fonts.googleapis.com'},
 	{

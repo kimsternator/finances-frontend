@@ -1,16 +1,16 @@
 import {DataGrid} from '@mui/x-data-grid';
-import type {SpendingExpense} from '@Types';
+import type {Transaction} from '@Types';
 import {columnConfig} from './spendingTableConfig';
 
 type SpendingTableProps = {
 	isExpenseDataLoading: boolean;
-	expenseData: SpendingExpense[];
+	transactions: Transaction[];
 };
 
-export const SpendingTable = ({expenseData}: SpendingTableProps) => {
+export const SpendingTable = ({transactions}: SpendingTableProps) => {
 	return (
 		<DataGrid
-			rows={expenseData}
+			rows={transactions}
 			columns={columnConfig}
 			disableRowSelectionOnClick
 		/>

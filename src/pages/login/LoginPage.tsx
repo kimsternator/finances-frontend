@@ -4,6 +4,7 @@ import {LoginForm} from './components';
 const LoginPageContainer = styled(Box)(({theme}) => ({
 	display: 'flex',
 	height: '100%',
+	width: '100%',
 	padding: theme.spacing(5),
 	boxSizing: 'border-box',
 	alignItems: 'center',

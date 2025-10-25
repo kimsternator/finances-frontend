@@ -1,34 +1,13 @@
 import {Box, Card, styled} from '@mui/material';
 import {SpendingTable} from './components';
 import {SpendingGraphs} from './components/SpendingGraphs';
-
-const DUMMY_DATA = [
-	{
-		id: '1',
-		name: 'transation1',
-		type: 'type1',
-		amount: 100,
-		date: new Date(Date.now()),
-	},
-	{
-		id: '2',
-		name: 'transation2',
-		type: 'type2',
-		amount: 2100,
-		date: new Date(Date.now() - 24 * 60 * 60 * 1000),
-	},
-	{
-		id: '3',
-		name: 'transation3',
-		type: 'type3',
-		amount: -500,
-		date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-	},
-];
+import {useListTransactionsQuery} from '~/api/transaction/transactionService';
+import {prepareExpenseData} from '@Utils';
 
 const SpendingPageLayout = styled(Box)(({theme}) => ({
 	backgroundColor: 'skyblue',
 	height: '100%',
+	width: '100%',
 	padding: theme.spacing(5),
 	display: 'flex',
 	flexDirection: 'column',
@@ -40,13 +19,24 @@ const LayoutCard = styled(Card)(() => ({
 }));
 
 export const SpendingPage = () => {
+	const {data, isError, isLoading} = useListTransactionsQuery({
+		pageSize: 10,
+		pageNumber: 1,
+	});
+
+	const transactions =
+		!isLoading && !isError && data ? prepareExpenseData(data.transactions) : [];
+
 	return (
 		<SpendingPageLayout>
-			<LayoutCard>
+			{/* <LayoutCard>
 				<SpendingGraphs expenseData={DUMMY_DATA} />
-			</LayoutCard>
+			</LayoutCard> */}
 			<LayoutCard>
-				<SpendingTable isExpenseDataLoading={false} expenseData={DUMMY_DATA} />
+				<SpendingTable
+					isExpenseDataLoading={isLoading}
+					transactions={transactions}
+				/>
 			</LayoutCard>
 		</SpendingPageLayout>
 	);
