@@ -11,9 +11,10 @@ import './root.scss';
 import {Provider} from 'react-redux';
 import {store} from '@State';
 import {AuthManager} from '@Api';
-import {NavigationBar} from '@Components';
+import {NavigationBar, NavigationTabs} from '@Components';
 
 import {AuthLoader} from './api/auth/authLoader';
+import {Box, CssBaseline, styled} from '@mui/material';
 export const links: Route.LinksFunction = () => [
 	{rel: 'preconnect', href: 'https://fonts.googleapis.com'},
 	{
@@ -45,13 +46,35 @@ export function Layout({children}: {children: React.ReactNode}) {
 	);
 }
 
+const AppContainer = styled(Box)(() => ({
+	display: 'flex',
+	flexDirection: 'column',
+	height: '100%',
+	width: '100%',
+	boxSizing: 'border-box',
+}));
+
+const AppContentContainer = styled(Box)(() => ({
+	display: 'flex',
+	flexDirection: 'row',
+	height: '100%',
+	width: '100%',
+	boxSizing: 'border-box',
+}));
+
 export default function App() {
 	return (
 		<Provider store={store}>
+			<CssBaseline />
 			<AuthLoader />
 			<AuthManager />
-			<NavigationBar />
-			<Outlet />
+			<AppContainer>
+				<NavigationBar />
+				<AppContentContainer>
+					<NavigationTabs />
+					<Outlet />
+				</AppContentContainer>
+			</AppContainer>
 		</Provider>
 	);
 }

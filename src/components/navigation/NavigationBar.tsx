@@ -4,6 +4,7 @@ import {Routes} from '@Constants';
 import {isRoute} from '@Utils';
 import HomeIcon from '@mui/icons-material/Home';
 import {AccountMenu} from '../AccountMenu';
+import {NavigationTabsVisibility} from '../NavigationTabs';
 
 const HorizontalNavBarContainer = styled(Box)(() => ({
 	display: 'flex',
@@ -35,6 +36,7 @@ export const NavigationBar = () => {
 	return (
 		<NavigationBarContainer>
 			<LeftContainer>
+				<NavigationTabsVisibility />
 				<HomeIcon />
 				<Divider orientation="vertical" />
 				<Typography>hello</Typography>

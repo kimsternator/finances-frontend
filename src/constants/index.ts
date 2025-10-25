@@ -5,3 +5,4 @@ export * from './httpConstants';
 export * from './queryConstants';
 export * from './routeConstants';
 export * from './storageConstants';
+export * from './uiConstants';

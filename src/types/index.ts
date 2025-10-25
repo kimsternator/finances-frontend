@@ -8,3 +8,4 @@ export * from './navigationBarTypes';
 export * from './routeTypes';
 export * from './stateTypes';
 export * from './storageTypes';
+export * from './uiTypes';
