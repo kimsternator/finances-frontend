@@ -2,6 +2,7 @@ import type {
 	LoginData,
 	LoginResponse,
 	RecursiveNullable,
+	StorageTypeValues,
 	TokenResponse,
 } from '@Types';
 import {
@@ -28,6 +29,14 @@ export const isValidLoginData = (loginData: LoginData): boolean => {
 type SetAuthDataInStorage = LoginResponse & {
 	username: string;
 	rememberMe: boolean;
+};
+
+export const getStorageTypeFromStorage = (): StorageTypeValues => {
+	const storageType =
+		(getStorageClient(StorageType.LOCAL).getItem(
+			STORAGE_SESSION_PERSISTENCE_KEY,
+		) as StorageTypeValues | null) ?? DEFAULT_STORAGE_TYPE;
+	return storageType;
 };
 
 export const setAuthDataInStorage = ({
@@ -59,10 +68,7 @@ export const getAuthDataFromStorage = (): GetAuthDataFromStorageResult => {
 		refreshTokenExpiryTime: null,
 	};
 	// StorageType will always be persisted in local storage
-	const storageType =
-		(getStorageClient(StorageType.LOCAL).getItem(
-			STORAGE_SESSION_PERSISTENCE_KEY,
-		) as string | null) ?? DEFAULT_STORAGE_TYPE;
+	const storageType = getStorageTypeFromStorage();
 	const client = getStorageClient(storageType);
 	try {
 		result.username = client.getItem(STORAGE_USERNAME_KEY);
@@ -71,12 +77,26 @@ export const getAuthDataFromStorage = (): GetAuthDataFromStorageResult => {
 			...JSON.parse(client.getItem(STORAGE_AUTH_DATA_KEY) ?? '{}'),
 		};
 	} catch (exception: any) {
-		console.info(
+		console.error(
 			`Error getting auth data from ${storageType} storage with exception: ${exception}`,
 		);
 		return result;
 	}
 	return result;
+};
+
+export const clearAuthDataFromStorage = () => {
+	const storageType = getStorageTypeFromStorage();
+	const client = getStorageClient(storageType);
+	try {
+		client.removeItem(STORAGE_USERNAME_KEY);
+		client.removeItem(STORAGE_AUTH_DATA_KEY);
+		client.removeItem(STORAGE_SESSION_PERSISTENCE_KEY);
+	} catch (exception: any) {
+		console.error(
+			`Error removing auth data from storage with exception: ${exception}`,
+		);
+	}
 };
 
 export const validateAuthData = (

@@ -8,11 +8,21 @@ import {
 	selectRefreshTokenExpiryTime,
 	useTypedSelector,
 } from '@State';
-import {checkTokenExpired, isRoute} from '@Utils';
+import {
+	checkTokenExpired,
+	getStorageTypeFromStorage,
+	isRoute,
+	setAuthDataInStorage,
+} from '@Utils';
 import {useRefreshTokenMutation} from '../authService';
-import {Routes, TOKEN_REFRESH_BUFFER_MS} from '@Constants';
+import {Routes, StorageType, TOKEN_REFRESH_BUFFER_MS} from '@Constants';
 import dayjs from 'dayjs';
 
+/*
+ * The auth manager is responsible for maintaining an active access key through refreshing
+ * by the given refresh token. When the refresh token is expired or invalid, the user will
+ * be navigated to the login page
+ */
 export const useAuthManager = () => {
 	const isAuthLoading = useTypedSelector(selectIsAuthLoading);
 	const currentUser = useTypedSelector(selectCurrentUser);
@@ -42,11 +52,22 @@ export const useAuthManager = () => {
 		}
 		if (!isRefreshTokenError && !isRefreshTokenLoading) {
 			const refreshTokenTimeout = setInterval(
-				() => {
+				async () => {
 					console.info(
 						'Access token about to expired. Refreshing access token.',
 					);
-					refreshTokenFn({username: currentUser.username, refreshToken});
+					const {data} = await refreshTokenFn({
+						username: currentUser.username,
+						refreshToken,
+					});
+					if (data) {
+						const storageType = getStorageTypeFromStorage();
+						setAuthDataInStorage({
+							username: currentUser.username,
+							rememberMe: storageType === StorageType.LOCAL,
+							...data,
+						});
+					}
 				},
 				dayjs(accessTokenExpiryTime).diff(dayjs()) - TOKEN_REFRESH_BUFFER_MS,
 			);

@@ -18,6 +18,7 @@
 			"~/*": ["src/*"],
 			"@Api": ["src/api"],
 			"@Auth/*": ["src/auth/*"],
+			"@Components": ["src/components"],
 			"@Constants": ["src/constants"],
 			"@Pages": ["src/pages"],
 			"@State": ["src/state"],

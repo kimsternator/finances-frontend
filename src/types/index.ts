@@ -4,6 +4,7 @@ export * from './authTypes';
 export * from './commonTypes';
 export * from './EntityTypes';
 export * from './graphTypes';
+export * from './navigationBarTypes';
 export * from './routeTypes';
 export * from './stateTypes';
 export * from './storageTypes';

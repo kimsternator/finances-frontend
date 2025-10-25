@@ -38,6 +38,12 @@ export const authSlice = createSlice({
 		setCurrentUser: (state, action: PayloadAction<UserResponse | null>) => {
 			state.currentUser = action.payload;
 		},
+		clearAuthData: (state) => {
+			state.accessToken = '';
+			state.accessTokenExpiryTime = 0;
+			state.refreshToken = '';
+			state.refreshTokenExpiryTime = 0;
+		},
 	},
 	extraReducers: (builder) => {
 		builder.addMatcher(
