@@ -11,4 +11,9 @@ export const navigationTabOptions = [
 		label: 'Transactions',
 		route: Routes.SPENDING,
 	},
+	{
+		id: '2',
+		label: 'Tags',
+		route: Routes.TAG,
+	},
 ];

@@ -71,6 +71,12 @@ export type ListTransactionResponse = PaginatedResponse & {
 
 // ---------- Tag Types ----------
 
+export type CreateTagRequest = {
+	name: string | null;
+	description: string | null;
+	color: string | null;
+};
+
 export type ListTagsRequest = PaginatedRequest;
 
 export type ListTagsResponse = PaginatedResponse & {

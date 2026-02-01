@@ -9,6 +9,7 @@ export default [
 	route(Routes.HOME, 'routes/home-route.tsx'),
 	route(Routes.LOGIN, 'routes/login-route.tsx'),
 	route(Routes.SPENDING, 'routes/spending-route.tsx'),
+	route(Routes.TAG, 'routes/tag-route.tsx'),
 
 	route(
 		'/.well-known/appspecific/com.chrome.devtools.json',
