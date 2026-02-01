@@ -25,7 +25,6 @@ import {useTypedDispatch} from '@State';
 const LoginFormContainer = styled(Box)<BoxProps>(({theme}) => ({
 	display: 'flex',
 	flexDirection: 'column',
-	boxSizing: 'border-box',
 	padding: theme.spacing(3),
 	alignItems: 'flex-start',
 	gap: theme.spacing(1),

@@ -1,6 +1,7 @@
 import type {TransactionType} from '@Constants';
 import type {
 	PaginatedResponse,
+	TagResponse,
 	TokenResponse,
 	TransactionResponse,
 	UserResponse,
@@ -39,7 +40,7 @@ export type CreateTransactionRequest = {
 	amount: number;
 	type: TransactionType;
 	tagIds: string[];
-	data: string;
+	date: string;
 };
 
 export type CreateTransactionResponse = TransactionResponse;
@@ -66,4 +67,12 @@ export type ListTransactionRequest = PaginatedRequest;
 
 export type ListTransactionResponse = PaginatedResponse & {
 	transactions: TransactionResponse[];
+};
+
+// ---------- Tag Types ----------
+
+export type ListTagsRequest = PaginatedRequest;
+
+export type ListTagsResponse = PaginatedResponse & {
+	tags: TagResponse[];
 };

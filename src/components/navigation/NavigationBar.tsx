@@ -5,23 +5,26 @@ import {isRoute} from '@Utils';
 import HomeIcon from '@mui/icons-material/Home';
 import {AccountMenu} from '../AccountMenu';
 import {NavigationTabsVisibility} from '../NavigationTabs';
+import {FloatLeftContainer, FloatRightContainer} from '@Components';
 
-const HorizontalNavBarContainer = styled(Box)(() => ({
+const horizontalNavBarContainerStyles = {
 	display: 'flex',
 	flexDirection: 'row',
-}));
+} as const;
 
-const NavigationBarContainer = styled(HorizontalNavBarContainer)(({theme}) => ({
+const NavigationBarContainer = styled(Box)(({theme}) => ({
+	...horizontalNavBarContainerStyles,
 	padding: theme.spacing(0.25, 0.5),
 }));
 
-const LeftContainer = styled(HorizontalNavBarContainer)(({theme}) => ({
-	marginRight: 'auto',
+const LeftContainer = styled(FloatLeftContainer)(({theme}) => ({
+	...horizontalNavBarContainerStyles,
 	gap: theme.spacing(0.5),
 }));
 
-const RightContainer = styled(HorizontalNavBarContainer)(() => ({
-	marginLeft: 'auto',
+const RightContainer = styled(FloatRightContainer)(({theme}) => ({
+	...horizontalNavBarContainerStyles,
+	gap: theme.spacing(0.5),
 }));
 
 export const NavigationBar = () => {

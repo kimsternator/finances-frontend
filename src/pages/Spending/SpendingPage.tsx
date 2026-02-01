@@ -1,5 +1,5 @@
 import {Box, Card, styled} from '@mui/material';
-import {SpendingTable} from './components';
+import {SpendingTable, SpendingTableHeader} from './components';
 import {SpendingGraphs} from './components/SpendingGraphs';
 import {useListTransactionsQuery} from '~/api/transaction/transactionService';
 import {prepareExpenseData} from '@Utils';
@@ -14,18 +14,29 @@ const SpendingPageLayout = styled(Box)(({theme}) => ({
 	gap: theme.spacing(2),
 }));
 
-const LayoutCard = styled(Card)(() => ({
+const LayoutCard = styled(Card)(({theme}) => ({
+	display: 'flex',
+	flexDirection: 'column',
 	flex: 1,
+	padding: theme.spacing(1, 2),
+	gap: theme.spacing(2),
 }));
 
 export const SpendingPage = () => {
-	const {data, isError, isLoading} = useListTransactionsQuery({
+	const {
+		data,
+		isError: isTransactionsError,
+		isLoading: isTransactionsLoading,
+		refetch: refetchTransactions,
+	} = useListTransactionsQuery({
 		pageSize: 10,
 		pageNumber: 1,
 	});
 
 	const transactions =
-		!isLoading && !isError && data ? prepareExpenseData(data.transactions) : [];
+		!isTransactionsLoading && !isTransactionsError && data
+			? prepareExpenseData(data.transactions)
+			: [];
 
 	return (
 		<SpendingPageLayout>
@@ -33,8 +44,9 @@ export const SpendingPage = () => {
 				<SpendingGraphs expenseData={DUMMY_DATA} />
 			</LayoutCard> */}
 			<LayoutCard>
+				<SpendingTableHeader onRefetchTransactions={refetchTransactions} />
 				<SpendingTable
-					isExpenseDataLoading={isLoading}
+					isExpenseDataLoading={isTransactionsLoading}
 					transactions={transactions}
 				/>
 			</LayoutCard>

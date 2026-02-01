@@ -4,7 +4,7 @@ import {GridMoreVertIcon} from '@mui/x-data-grid';
 import type {SpendingExpense} from '@Types';
 
 export const SpendingTableActions = ({row}: {row: SpendingExpense}) => {
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);

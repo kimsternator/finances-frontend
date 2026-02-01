@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {authService} from '@Api';
+import {authService, tagService} from '@Api';
 // import directly to prevent circular dependency
 import {authSlice} from './auth/authSlice';
 import {uiSlice} from './ui/uiSlice';
@@ -11,10 +11,12 @@ export const store = configureStore({
 		ui: uiSlice.reducer,
 		// ---------- API ----------
 		[authService.reducerPath]: authService.reducer,
+		[tagService.reducerPath]: tagService.reducer,
 		[transactionService.reducerPath]: transactionService.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware()
 			.concat(authService.middleware)
+			.concat(tagService.middleware)
 			.concat(transactionService.middleware),
 });

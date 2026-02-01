@@ -15,6 +15,8 @@ import {NavigationBar, NavigationTabs} from '@Components';
 import {AuthLoader} from './api/auth/authLoader';
 import {Box, CssBaseline, styled} from '@mui/material';
 import '@Configuration/dayjs-configuration';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
 export const links: Route.LinksFunction = () => [
 	{rel: 'preconnect', href: 'https://fonts.googleapis.com'},
@@ -65,18 +67,20 @@ const AppContentContainer = styled(Box)(() => ({
 
 export default function App() {
 	return (
-		<Provider store={store}>
-			<CssBaseline />
-			<AuthLoader />
-			<AuthManager />
-			<AppContainer>
-				<NavigationBar />
-				<AppContentContainer>
-					<NavigationTabs />
-					<Outlet />
-				</AppContentContainer>
-			</AppContainer>
-		</Provider>
+		<LocalizationProvider dateAdapter={AdapterDayjs}>
+			<Provider store={store}>
+				<CssBaseline />
+				<AuthLoader />
+				<AuthManager />
+				<AppContainer>
+					<NavigationBar />
+					<AppContentContainer>
+						<NavigationTabs />
+						<Outlet />
+					</AppContentContainer>
+				</AppContainer>
+			</Provider>
+		</LocalizationProvider>
 	);
 }
 

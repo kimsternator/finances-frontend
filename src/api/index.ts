@@ -1,2 +1,3 @@
-export * from './auth/authService';
 export * from './auth';
+export * from './tag';
+export * from './transaction';
