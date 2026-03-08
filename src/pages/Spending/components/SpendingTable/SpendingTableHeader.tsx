@@ -1,9 +1,12 @@
 import {Box, Button, styled, Typography} from '@mui/material';
-import {useCreateTransactionMutation} from '@Api';
+import {useCreateBatchTransactionsMutation} from '@Api';
 import {FloatLeftContainer, FloatRightContainer} from '@Components';
 import {CreateTransactionModal} from '../CreateTransactionModal';
 import {useState} from 'react';
-import type {CreateTransactionRequest, CreateTransactionResponse} from '@Types';
+import type {
+	CreateBatchTransactionRequest,
+	CreateBatchTransactionResponse,
+} from '@Types';
 
 const SpendingTableHeaderContainer = styled(Box)(() => ({
 	display: 'flex',
@@ -18,27 +21,30 @@ export const SpendingTableHeader = ({
 	onRefetchTransactions,
 }: SpendingTableHeaderProps) => {
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-	const [addNewTransaction] = useCreateTransactionMutation();
+	const [addNewTransactions] = useCreateBatchTransactionsMutation();
 
 	const handleOpenCreateModal = () => {
 		setIsCreateModalOpen(true);
 	};
 
-	const handleCloseCreateModal = () => {
+	const handleCloseCreateModal = (event: any, reason: string) => {
+		if (reason === 'backdropClick') {
+			return;
+		}
 		setIsCreateModalOpen(false);
 	};
 
-	const handleAddNewTransaction = (request: CreateTransactionRequest) => {
+	const handleAddNewTransactions = (request: CreateBatchTransactionRequest) => {
 		setIsCreateModalOpen(false);
 		// TODO: send toast for in progress
-		addNewTransaction(request)
+		addNewTransactions(request)
 			.unwrap()
-			.then((response: CreateTransactionResponse) => {
+			.then((response: CreateBatchTransactionResponse) => {
 				onRefetchTransactions();
 			})
 			.catch((error) => {
 				// TODO: send toast for error
-				console.error('Error adding new transaction:', error);
+				console.error('Error adding new transactions:', error);
 			});
 	};
 
@@ -56,8 +62,9 @@ export const SpendingTableHeader = ({
 			</SpendingTableHeaderContainer>
 			<CreateTransactionModal
 				open={isCreateModalOpen}
-				onAddNewTransaction={handleAddNewTransaction}
+				onAddNewTransactions={handleAddNewTransactions}
 				onClose={handleCloseCreateModal}
+				disableEscapeKeyDown
 			/>
 		</>
 	);

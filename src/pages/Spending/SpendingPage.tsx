@@ -29,7 +29,7 @@ export const SpendingPage = () => {
 		isLoading: isTransactionsLoading,
 		refetch: refetchTransactions,
 	} = useListTransactionsQuery({
-		pageSize: 10,
+		pageSize: 50,
 		pageNumber: 1,
 	});
 

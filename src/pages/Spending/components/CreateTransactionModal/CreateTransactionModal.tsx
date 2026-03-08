@@ -4,7 +4,7 @@ import type {DialogProps} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {FloatLeftContainer, FloatRightContainer} from '@Components';
 import type {
-	CreateTransactionRequest,
+	CreateBatchTransactionRequest,
 	CreateTransactionTableItem,
 } from '@Types';
 import {
@@ -14,7 +14,10 @@ import {
 import {DataGrid, useGridApiRef} from '@mui/x-data-grid';
 import {EMPTY_NEW_TRANSACTION_TABLE_ITEM} from '@Constants';
 import dayjs from 'dayjs';
-import {getNewTransactionTableItem} from '@Utils';
+import {
+	getNewTransactionTableItem,
+	mapTransactionTableItemToCreateTransactionRequest,
+} from '@Utils';
 import {useListTagsQuery} from '@Api';
 
 const DialogContainer = styled(Box)(({theme}) => ({
@@ -37,18 +40,22 @@ const ContentContainer = styled(Box)(() => ({
 
 const FooterContainer = styled(Box)(() => ({
 	marginTop: 'auto',
+	width: '100%',
 }));
 
-const CreateButtonContainer = styled(FloatRightContainer)(() => ({
-	width: 'fit-content',
+const FooterButtonsContainer = styled(Box)(({theme}) => ({
+	display: 'flex',
+	flexDirection: 'row',
+	gap: theme.spacing(1),
+	justifyContent: 'flex-end',
 }));
 
 type CreateTransactionModalProps = DialogProps & {
-	onAddNewTransaction: (request: CreateTransactionRequest) => void;
+	onAddNewTransactions: (request: CreateBatchTransactionRequest) => void;
 };
 
 export const CreateTransactionModal = ({
-	onAddNewTransaction,
+	onAddNewTransactions,
 	...dialogProps
 }: CreateTransactionModalProps) => {
 	const rowId = useRef<number>(1);
@@ -103,18 +110,15 @@ export const CreateTransactionModal = ({
 	};
 
 	const handleCreateTransactions = () => {
-		console.log(createTransactionData);
-		for (const transaction of createTransactionData) {
-			const createTransactionRequest: CreateTransactionRequest = {
-				name: transaction.name,
-				description: transaction.description,
-				amount: Number(transaction.amount),
-				type: transaction.type,
-				date: dayjs(transaction.date).toISOString(),
-				tagIds: transaction.tags.map((tag) => tag.id),
-			};
-			onAddNewTransaction(createTransactionRequest);
-		}
+		const createTransactionRequestData = createTransactionData.map(
+			(transaction) =>
+				mapTransactionTableItemToCreateTransactionRequest(transaction),
+		);
+		const createBatchTransactionRequest = {
+			transactions: createTransactionRequestData,
+		};
+		onAddNewTransactions(createBatchTransactionRequest);
+		setCreateTransactionData([getNewTransactionTableItem()]);
 	};
 
 	const columns = getCreateTransactionTableConfig({
@@ -122,6 +126,13 @@ export const CreateTransactionModal = ({
 		tagOptions: tagOptions?.tags ?? [],
 		onRemoveRow: handleRemoveRow,
 	});
+
+	const {onClose} = dialogProps;
+
+	const handleCancel = () => {
+		setCreateTransactionData([getNewTransactionTableItem()]);
+		onClose?.({}, '' as 'backdropClick');
+	};
 
 	return (
 		<Dialog {...dialogProps} maxWidth="lg" fullWidth>
@@ -156,11 +167,14 @@ export const CreateTransactionModal = ({
 					/>
 				</ContentContainer>
 				<FooterContainer>
-					<CreateButtonContainer>
+					<FooterButtonsContainer>
+						<Button variant="outlined" onClick={handleCancel}>
+							Cancel
+						</Button>
 						<Button variant="contained" onClick={handleCreateTransactions}>
 							Create
 						</Button>
-					</CreateButtonContainer>
+					</FooterButtonsContainer>
 				</FooterContainer>
 			</DialogContainer>
 		</Dialog>

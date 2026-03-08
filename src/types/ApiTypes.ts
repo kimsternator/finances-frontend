@@ -45,6 +45,12 @@ export type CreateTransactionRequest = {
 
 export type CreateTransactionResponse = TransactionResponse;
 
+export type CreateBatchTransactionRequest = {
+	transactions: CreateTransactionRequest[];
+};
+
+export type CreateBatchTransactionResponse = CreateTransactionResponse[];
+
 export type GetTransactionRequest = {
 	id: string;
 };

@@ -2,6 +2,8 @@ import {createApi} from '@reduxjs/toolkit/query/react';
 import {getRetryableQuery} from '../query';
 import {TRANSACTION_BASE_URL} from '@Constants';
 import type {
+	CreateBatchTransactionRequest,
+	CreateBatchTransactionResponse,
 	CreateTransactionRequest,
 	CreateTransactionResponse,
 	DeleteTransactionRequest,
@@ -35,6 +37,16 @@ export const transactionService = createApi({
 		>({
 			query: (request) => ({
 				url: '/create',
+				method: 'POST',
+				body: request,
+			}),
+		}),
+		createBatchTransactions: builder.mutation<
+			CreateBatchTransactionResponse,
+			CreateBatchTransactionRequest
+		>({
+			query: (request) => ({
+				url: '/create-batch',
 				method: 'POST',
 				body: request,
 			}),
@@ -81,6 +93,7 @@ export const transactionService = createApi({
 
 export const {
 	useCreateTransactionMutation,
+	useCreateBatchTransactionsMutation,
 	useGetTransactionQuery,
 	useUpdateTransactionMutation,
 	useDeleteTransactionMutation,

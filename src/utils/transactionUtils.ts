@@ -1,4 +1,5 @@
 import type {
+	CreateTransactionRequest,
 	CreateTransactionTableItem,
 	Transaction,
 	TransactionResponse,
@@ -41,4 +42,18 @@ export const getNewTransactionTableItem = (): CreateTransactionTableItem => {
 		date: dayjs().toString(),
 	};
 	return newTransationTableItem;
+};
+
+export const mapTransactionTableItemToCreateTransactionRequest = (
+	tableItem: CreateTransactionTableItem,
+): CreateTransactionRequest => {
+	const createTransactionRequest = {
+		name: tableItem.name,
+		description: tableItem.description,
+		amount: Number(tableItem.amount),
+		type: tableItem.type,
+		date: dayjs(tableItem.date).toISOString(),
+		tagIds: tableItem.tags.map((tag) => tag.id),
+	};
+	return createTransactionRequest;
 };
