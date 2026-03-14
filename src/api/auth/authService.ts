@@ -1,5 +1,5 @@
 import {createApi} from '@reduxjs/toolkit/query/react';
-import {AUTH_BASE_URL} from '@Constants';
+import {AUTH_BASE_URL, AUTH_SERVICE_REDUCER_KEY, HTTP_METHOD} from '@Constants';
 import type {
 	GetUserRequest,
 	GetUserResponse,
@@ -14,7 +14,7 @@ import {setAuthorizationHeader} from '@Utils';
 import {getRetryableQuery} from '../query';
 
 export const authService = createApi({
-	reducerPath: 'authService',
+	reducerPath: AUTH_SERVICE_REDUCER_KEY,
 	baseQuery: getRetryableQuery({
 		baseUrl: AUTH_BASE_URL,
 		prepareHeaders: (headers, {getState}) => {
@@ -28,27 +28,27 @@ export const authService = createApi({
 		login: builder.mutation<LoginResponse, LoginRequest>({
 			query: (request) => ({
 				url: '/login',
-				method: 'POST',
+				method: HTTP_METHOD.POST,
 				body: request,
 			}),
 		}),
 		refreshToken: builder.mutation<RefreshTokenResponse, RefreshTokenRequest>({
 			query: (request) => ({
 				url: '/refresh-token',
-				method: 'POST',
+				method: HTTP_METHOD.POST,
 				body: request,
 			}),
 		}),
 		getUser: builder.query<GetUserResponse, GetUserRequest>({
 			query: ({username}) => ({
 				url: `/get-user/${username}`,
-				method: 'GET',
+				method: HTTP_METHOD.GET,
 			}),
 		}),
 		getCurrentUser: builder.query<GetUserResponse, GetUserRequest>({
 			query: ({username}) => ({
 				url: `/get-user/${username}`,
-				method: 'GET',
+				method: HTTP_METHOD.GET,
 			}),
 		}),
 	}),
